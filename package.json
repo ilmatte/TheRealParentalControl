@@ -1,0 +1,22 @@
+{
+  "name": "the-real-parental-control",
+  "version": "1.0.0",
+  "description": "Remote parental control app like Family Link with Chrome/website restrictions",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "client-windows",
+    "parent-app"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "dev": "npm run dev --workspaces",
+    "build": "npm run build --workspaces",
+    "test": "npm test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "format": "npm run format --workspaces"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
