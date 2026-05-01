@@ -16,6 +16,11 @@ const restrictionSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  // Support for specific Windows user restriction
+  windows_username: {
+    type: String,
+    description: 'Windows username this restriction applies to',
+  },
   blocked_websites: {
     type: [String],
     default: [],

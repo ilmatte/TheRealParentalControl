@@ -19,6 +19,22 @@ const deviceSchema = new mongoose.Schema({
   },
   os_version: String,
   chrome_version: String,
+  // Multi-user support for Windows
+  windows_users: [
+    {
+      username: {
+        type: String,
+        required: true,
+      },
+      display_name: String,
+      sid: String, // Windows Security Identifier
+      is_child: {
+        type: Boolean,
+        default: false,
+      },
+      _id: false,
+    },
+  ],
   is_active: {
     type: Boolean,
     default: true,

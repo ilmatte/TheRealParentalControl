@@ -10,6 +10,7 @@ router.post('/', authParentOnly, async (req, res) => {
     const {
       child_id,
       device_id,
+      windows_username,
       blocked_websites,
       allowed_websites,
       daily_time_limit,
@@ -20,6 +21,7 @@ router.post('/', authParentOnly, async (req, res) => {
       child_id,
       device_id,
       parent_id: req.user.id,
+      windows_username,
       blocked_websites: blocked_websites || [],
       allowed_websites: allowed_websites || [],
       daily_time_limit: daily_time_limit || 120,
@@ -28,6 +30,37 @@ router.post('/', authParentOnly, async (req, res) => {
 
     await restriction.save();
     res.json({ message: 'Restriction created', restriction });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get restrictions for specific Windows user
+router.get('/device/:device_id/user/:windows_username', authenticateToken, async (req, res) => {
+  try {
+    const { device_id, windows_username } = req.params;
+    const restrictions = await Restriction.find({
+      device_id,
+      windows_username,
+      parent_id: req.user.id,
+    }).populate('child_id device_id');
+
+    res.json(restrictions || []);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all restrictions for a device
+router.get('/device/:device_id/all', authenticateToken, async (req, res) => {
+  try {
+    const { device_id } = req.params;
+    const restrictions = await Restriction.find({
+      device_id,
+      parent_id: req.user.id,
+    }).populate('child_id device_id');
+
+    res.json(restrictions || []);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

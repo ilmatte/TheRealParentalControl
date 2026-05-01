@@ -2,15 +2,23 @@ const os = require('os');
 const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 const io = require('socket.io-client');
+const { exec } = require('child_process');
+const util = require('util');
+
+const execPromise = util.promisify(exec);
 
 class DeviceManager {
-  constructor() {
+  constructor(useLocalServer = false) {
     this.deviceId = this.getOrCreateDeviceId();
     this.userId = null;
     this.token = null;
     this.socket = null;
-    this.serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:5000';
+    this.useLocalServer = useLocalServer;
+    this.serverUrl = useLocalServer 
+      ? 'http://localhost:3001'
+      : (process.env.REACT_APP_SERVER_URL || 'http://localhost:5000');
     this.isConnected = false;
+    this.windowsUsers = [];
   }
 
   getOrCreateDeviceId() {
@@ -23,6 +31,56 @@ class DeviceManager {
     return id;
   }
 
+  /**
+   * Get all Windows users on this machine
+   */
+  async getWindowsUsers() {
+    if (process.platform !== 'win32') {
+      return [];
+    }
+
+    try {
+      const { stdout } = await execPromise('Get-LocalUser | ConvertTo-Json', {
+        shell: 'powershell.exe',
+      });
+      
+      const users = JSON.parse(stdout);
+      const userList = Array.isArray(users) ? users : [users];
+      
+      this.windowsUsers = userList.map(user => ({
+        username: user.Name,
+        display_name: user.FullName || user.Name,
+        sid: user.SID,
+        enabled: user.Enabled,
+      }));
+
+      return this.windowsUsers;
+    } catch (error) {
+      console.error('Failed to get Windows users:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get current Windows user
+   */
+  getCurrentWindowsUser() {
+    if (process.platform !== 'win32') {
+      return os.userInfo().username;
+    }
+
+    try {
+      const { stdout } = require('child_process').execSync(
+        'whoami /upn',
+        { encoding: 'utf-8' }
+      ).trim();
+      
+      return stdout.split('\\').pop() || os.userInfo().username;
+    } catch (error) {
+      return os.userInfo().username;
+    }
+  }
+
   getDeviceInfo() {
     return {
       device_id: this.deviceId,
@@ -30,6 +88,7 @@ class DeviceManager {
       os: 'windows',
       os_version: os.release(),
       platform: os.platform(),
+      windows_users: this.windowsUsers.filter(u => u.enabled),
     };
   }
 
@@ -54,6 +113,10 @@ class DeviceManager {
       // Save token locally
       localStorage?.setItem('auth_token', this.token);
       localStorage?.setItem('user_id', this.userId);
+      localStorage?.setItem('server_url', this.serverUrl);
+
+      // Get Windows users before registering device
+      await this.getWindowsUsers();
 
       // Register device
       await this.registerDevice();

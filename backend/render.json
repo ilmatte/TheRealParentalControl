@@ -1,0 +1,32 @@
+{
+  "services": [
+    {
+      "type": "web",
+      "name": "parental-control-api",
+      "plan": "free",
+      "runtime": "node",
+      "buildCommand": "npm install",
+      "startCommand": "npm start",
+      "envVars": [
+        {
+          "key": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "key": "JWT_SECRET",
+          "scope": "all"
+        },
+        {
+          "key": "MONGODB_URI",
+          "scope": "all"
+        }
+      ]
+    },
+    {
+      "type": "pserv",
+      "name": "parental-control-db",
+      "plan": "free",
+      "ipWhitelist": []
+    }
+  ]
+}

@@ -16,7 +16,15 @@
     ],
     "ios": {
       "supportsTabletMode": true,
-      "bundleIdentifier": "com.parentalcontrol.parent"
+      "bundleIdentifier": "com.parentalcontrol.parent",
+      "buildNumber": "1",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSLocalNetworkUsageDescription": "L'app ha bisogno di accedere alla rete locale per comunicare con il PC",
+        "NSBonjourServiceTypes": ["_http._tcp", "_ws._tcp"]
+      }
     },
     "android": {
       "adaptiveIcon": {

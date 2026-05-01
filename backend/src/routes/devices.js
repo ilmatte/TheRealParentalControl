@@ -7,7 +7,7 @@ const router = express.Router();
 // Register device
 router.post('/register', authenticateToken, async (req, res) => {
   try {
-    const { device_id, device_name, os, os_version, chrome_version } = req.body;
+    const { device_id, device_name, os, os_version, chrome_version, windows_users } = req.body;
 
     const existingDevice = await Device.findOne({ device_id });
     if (existingDevice) {
@@ -21,6 +21,7 @@ router.post('/register', authenticateToken, async (req, res) => {
       os,
       os_version,
       chrome_version,
+      windows_users: windows_users || [],
       last_sync: new Date(),
     });
 

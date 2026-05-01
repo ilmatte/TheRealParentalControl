@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const deviceRoutes = require('./routes/devices');
 const restrictionRoutes = require('./routes/restrictions');
 const activityRoutes = require('./routes/activity');
+const pairingRoutes = require('./routes/pairing');
 const { setupSocketHandlers } = require('./sockets/handlers');
 
 const app = express();
@@ -36,6 +37,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/devices', deviceRoutes);
 app.use('/api/restrictions', restrictionRoutes);
 app.use('/api/activity', activityRoutes);
+app.use('/api/pairing', pairingRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
