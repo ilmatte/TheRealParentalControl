@@ -2,6 +2,8 @@
 
 Un'app di parental control remoto moderna, tipo Family Link, che consente ai genitori di limitare l'uso di Chrome e specifici siti web sui dispositivi Windows dei figli.
 
+Supporta un backend cloud gratuito (Render.com) per il controllo remoto da iPhone senza port forwarding.
+
 ## 🎯 Caratteristiche Principali
 
 ### Per i Genitori (App Mobile React Native)
@@ -99,6 +101,8 @@ npm run dev --workspace=@ParentalControl/backend
 
 Il server sarà disponibile su `http://localhost:5000`
 
+> Per un deployment cloud gratuito su Render.com, usa `DEPLOYMENT.md`.
+
 ### 6. Avvia il client Electron (Windows)
 ```bash
 npm run dev --workspace=@ParentalControl/client-windows
@@ -127,6 +131,8 @@ CLIENT_URLS=http://localhost:3000,http://localhost:3001
 ```env
 REACT_APP_SERVER_URL=http://localhost:5000
 ```
+
+> Per l'installazione cloud su Render, imposta invece `REACT_APP_SERVER_URL` sull'URL di backend Render.
 
 ## 📚 API Endpoints
 
