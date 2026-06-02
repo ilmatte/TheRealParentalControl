@@ -40,13 +40,21 @@ function Register({ onRegisterSuccess, onSwitchToLogin }) {
       localStorage.setItem('user_id', response.data.user.id);
 
       if (window.electronAPI?.saveServiceConfig) {
-        await window.electronAPI.saveServiceConfig({
+        const res = await window.electronAPI.saveServiceConfig({
           serverUrl,
           authToken: response.data.token,
           authEmail: email,
           authPassword: password,
           userId: response.data.user.id,
         });
+        if (!res || res.success === false) {
+          const cfgPath = res?.configPath || 'unknown location';
+          setError(
+            `Saved settings failed: ${res?.error || 'permission denied'}. Please run the installer as administrator or grant write access to ${cfgPath}`
+          );
+          setIsLoading(false);
+          return;
+        }
       }
 
       onRegisterSuccess();

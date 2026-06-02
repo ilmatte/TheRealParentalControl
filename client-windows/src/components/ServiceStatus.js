@@ -25,7 +25,13 @@ function ServiceStatus({ serviceStatus }) {
         </div>
         <div className="info-item">
           <span className="label">Saved at:</span>
-          <span>{serviceStatus.savedAt ? new Date(serviceStatus.savedAt).toLocaleString() : 'Unknown'}</span>
+          <span>
+            {serviceStatus.savedAt ? new Date(serviceStatus.savedAt).toLocaleString() : 'Unknown'}
+          </span>
+        </div>
+        <div className="info-item">
+          <span className="label">Config file:</span>
+          <span>{serviceStatus.configPath || 'Unknown'}</span>
         </div>
       </div>
       <p>The service can now read this configuration at startup.</p>

@@ -13,8 +13,14 @@ function App() {
 
   const loadServiceStatus = async () => {
     if (window.electronAPI?.loadServiceConfig) {
-      const config = await window.electronAPI.loadServiceConfig();
-      setServiceStatus(config);
+      const result = await window.electronAPI.loadServiceConfig();
+      if (result && result.config) {
+        setServiceStatus({ ...result.config, configPath: result.configPath });
+      } else if (result && result.configPath) {
+        setServiceStatus({ configPath: result.configPath });
+      } else {
+        setServiceStatus(null);
+      }
     }
   };
 

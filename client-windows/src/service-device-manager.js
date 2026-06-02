@@ -13,8 +13,8 @@ const execPromise = util.promisify(exec);
 class ServiceDeviceManager extends EventEmitter {
   constructor(config = {}, persistence = {}) {
     super();
-    const dataDir = path.join(os.homedir(), '.therealparentalcontrol');
-    this.configPath = persistence.configPath || path.join(dataDir, 'agent-config.json');
+    const { getConfigPath } = require('../config-path');
+    this.configPath = persistence.configPath || getConfigPath();
     this.saveConfig = persistence.saveConfig || (() => {});
 
     this.serverUrl = config.serverUrl || process.env.SERVER_URL || 'http://localhost:5000';
@@ -62,7 +62,9 @@ class ServiceDeviceManager extends EventEmitter {
       if (this.email && this.password) {
         await this.login(this.email, this.password);
       } else {
-        throw new Error('Service configuration missing auth token or credentials. Set AUTH_TOKEN or AUTH_EMAIL/AUTH_PASSWORD.');
+        throw new Error(
+          'Service configuration missing auth token or credentials. Set AUTH_TOKEN or AUTH_EMAIL/AUTH_PASSWORD.'
+        );
       }
     }
 

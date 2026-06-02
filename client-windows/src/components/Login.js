@@ -37,13 +37,21 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
       localStorage.setItem('user_id', response.data.user.id);
 
       if (window.electronAPI?.saveServiceConfig) {
-        await window.electronAPI.saveServiceConfig({
+        const res = await window.electronAPI.saveServiceConfig({
           serverUrl,
           authToken: response.data.token,
           authEmail: email,
           authPassword: password,
           userId: response.data.user.id,
         });
+        if (!res || res.success === false) {
+          const cfgPath = res?.configPath || 'unknown location';
+          setError(
+            `Failed to save service settings: ${res?.error || 'permission denied'}. Run the installer as administrator or grant write access to ${cfgPath}`
+          );
+          setIsLoading(false);
+          return;
+        }
       }
 
       onLoginSuccess();

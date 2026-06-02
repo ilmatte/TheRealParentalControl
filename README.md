@@ -7,6 +7,7 @@ Supporta un backend cloud gratuito (Render.com) per il controllo remoto da iPhon
 ## 🎯 Caratteristiche Principali
 
 ### Per i Genitori (App Mobile React Native)
+
 - ✅ **Monitoraggio in tempo reale** - Visualizza l'attività su tutti i dispositivi dei tuoi figli
 - ✅ **Blocco siti web** - Blocca facilmente siti inappropriati
 - ✅ **Limiti di tempo** - Imposta limiti di tempo giornalieri per lo schermo
@@ -16,6 +17,7 @@ Supporta un backend cloud gratuito (Render.com) per il controllo remoto da iPhon
 - ✅ **Statistiche dettagliate** - Grafici e analisi del tempo sullo schermo
 
 ### Per i Figli (Client Windows Electron)
+
 - 🖥️ **Monitoraggio Chrome** - Traccia tutti i siti visitati in Chrome
 - 🌐 **Blocco siti automatico** - I siti bloccati vengono bloccati automaticamente
 - ⏱️ **Tracciamento tempo schermo** - Monitora il tempo totale di utilizzo del computer
@@ -70,12 +72,14 @@ TheRealParentalControl/
 ## 🚀 Installazione Veloce
 
 ### 1. Clone il repository
+
 ```bash
 git clone https://github.com/yourusername/TheRealParentalControl.git
 cd TheRealParentalControl
 ```
 
 ### 2. Installa le dipendenze
+
 ```bash
 npm install
 ```
@@ -83,6 +87,7 @@ npm install
 ### 3. Configura le variabili di ambiente
 
 **Backend (.env)**
+
 ```bash
 cd backend
 cp .env.example .env
@@ -90,11 +95,13 @@ cp .env.example .env
 ```
 
 ### 4. Avvia il database (con Docker)
+
 ```bash
 docker-compose up -d mongo
 ```
 
 ### 5. Avvia il backend
+
 ```bash
 npm run dev --workspace=@ParentalControl/backend
 ```
@@ -104,6 +111,7 @@ Il server sarà disponibile su `http://localhost:5000`
 > Per un deployment cloud gratuito su Render.com, usa `DEPLOYMENT.md`.
 
 ### 6. Avvia il client Electron (Windows)
+
 ```bash
 npm run dev --workspace=@ParentalControl/client-windows
 ```
@@ -137,6 +145,7 @@ npm run uninstall:system         # per il service di sistema (admin)
 Nota: l'installazione come servizio di sistema esegue il servizio con l'account `LocalSystem` per garantirne l'esecuzione indipendente dagli account utente.
 
 ### 7. Avvia l'app mobile genitore (React Native)
+
 ```bash
 npm run dev --workspace=@ParentalControl/parent-app
 ```
@@ -165,16 +174,19 @@ REACT_APP_SERVER_URL=http://localhost:5000
 ## 📚 API Endpoints
 
 ### Autenticazione
+
 - `POST /api/auth/register` - Registra nuovo utente
 - `POST /api/auth/login` - Login utente
 - `GET /api/auth/me` - Get current user
 
 ### Dispositivi
+
 - `POST /api/devices/register` - Registra dispositivo
 - `GET /api/devices/list` - Elenca dispositivi utente
 - `PUT /api/devices/:device_id/sync` - Sincronizza dispositivo
 
 ### Restrizioni
+
 - `GET /api/restrictions/child/:child_id` - Get restrizioni
 - `POST /api/restrictions` - Crea restrizione
 - `PUT /api/restrictions/:restriction_id` - Aggiorna restrizione
@@ -183,6 +195,7 @@ REACT_APP_SERVER_URL=http://localhost:5000
 - `POST /api/restrictions/:restriction_id/unlock-screen` - Sblocca schermo
 
 ### Attività
+
 - `GET /api/activity/child/:child_id` - Get attività del figlio
 - `GET /api/activity/child/:child_id/websites` - Get siti visitati
 - `GET /api/activity/child/:child_id/screen-time` - Get tempo schermo
@@ -190,12 +203,14 @@ REACT_APP_SERVER_URL=http://localhost:5000
 ## 🔌 WebSocket Events
 
 ### Client → Server
+
 - `register-device` - Registra dispositivo
 - `join-parent-room` - Unisciti a parent monitoring room
 - `activity-update` - Invia update attività
 - `check-website` - Controlla se sito è bloccato
 
 ### Server → Client
+
 - `activity-received` - Attività ricevuta dal figlio
 - `website-blocked` - Ordine blocco sito
 - `screen-lock` - Ordine blocco schermo
@@ -204,6 +219,7 @@ REACT_APP_SERVER_URL=http://localhost:5000
 ## 🗄️ Modelli Database
 
 ### User
+
 ```javascript
 {
   email: String,
@@ -217,6 +233,7 @@ REACT_APP_SERVER_URL=http://localhost:5000
 ```
 
 ### Device
+
 ```javascript
 {
   user_id: ObjectId,
@@ -230,6 +247,7 @@ REACT_APP_SERVER_URL=http://localhost:5000
 ```
 
 ### Restriction
+
 ```javascript
 {
   child_id: ObjectId,
@@ -243,6 +261,7 @@ REACT_APP_SERVER_URL=http://localhost:5000
 ```
 
 ### Activity
+
 ```javascript
 {
   child_id: ObjectId,
@@ -266,16 +285,19 @@ REACT_APP_SERVER_URL=http://localhost:5000
 ## 📱 Supporto Piattaforme
 
 ### Backend
+
 - ✅ Linux
 - ✅ macOS
 - ✅ Windows
 
 ### Client Bambino
+
 - ✅ Windows 7+ (Electron)
 - ⚠️ macOS (in development)
 - ⚠️ Linux (in development)
 
 ### App Genitore
+
 - ✅ iOS (React Native)
 - ✅ Android (React Native)
 - ✅ Web (con React - future)
@@ -283,21 +305,25 @@ REACT_APP_SERVER_URL=http://localhost:5000
 ## 🛠️ Development
 
 ### Installa dipendenze di development
+
 ```bash
 npm install
 ```
 
 ### Lint del codice
+
 ```bash
 npm run lint
 ```
 
 ### Format code
+
 ```bash
 npm run format
 ```
 
 ### Test
+
 ```bash
 npm test
 ```
@@ -305,6 +331,7 @@ npm test
 ## 📝 Log e Debug
 
 ### Backend
+
 ```bash
 # Usa nodemon in development
 npm run dev --workspace=@ParentalControl/backend
@@ -313,6 +340,7 @@ npm run dev --workspace=@ParentalControl/backend
 ```
 
 ### Client Windows
+
 ```bash
 # DevTools aperti automaticamente in development
 # Console log disponibili nella finestra Electron
@@ -321,6 +349,7 @@ npm run dev --workspace=@ParentalControl/backend
 ## 🐛 Troubleshooting
 
 ### Problema: "MongoDB connection refused"
+
 ```bash
 # Soluzione:
 docker-compose up -d mongo
@@ -328,12 +357,14 @@ docker-compose up -d mongo
 ```
 
 ### Problema: "Port 5000 already in use"
+
 ```bash
 # Soluzione: Cambia port in .env
 PORT=5001
 ```
 
 ### Problema: Chrome non monitored
+
 ```bash
 # Soluzione:
 # 1. Assicurati che Chrome è installato

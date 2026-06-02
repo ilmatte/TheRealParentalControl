@@ -7,8 +7,9 @@ const { setupChromeMonitoring } = require('./chrome-monitor');
 const { setupScreenTimeTracking } = require('./screen-time-tracker');
 const DeviceManager = require('./device-manager');
 
-const serviceConfigDir = path.join(os.homedir(), '.therealparentalcontrol');
-const serviceConfigPath = path.join(serviceConfigDir, 'agent-config.json');
+const { getConfigDir, getConfigPath } = require('../config-path');
+const serviceConfigDir = getConfigDir();
+const serviceConfigPath = getConfigPath();
 
 const ensureServiceConfigDir = () => {
   if (!fs.existsSync(serviceConfigDir)) {
@@ -115,9 +116,10 @@ ipcMain.on('logout', () => {
 });
 
 ipcMain.handle('load-service-config', () => {
-  return loadServiceConfig();
+  return { config: loadServiceConfig(), configPath: serviceConfigPath };
 });
 
 ipcMain.handle('save-service-config', (event, config) => {
-  return saveServiceConfig(config);
+  const result = saveServiceConfig(config);
+  return { ...result, configPath: serviceConfigPath };
 });

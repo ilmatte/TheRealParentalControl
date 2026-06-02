@@ -5,8 +5,9 @@ const DeviceManager = require('./src/service-device-manager');
 const ChromeMonitor = require('./src/service-chrome-monitor');
 const ScreenTimeTracker = require('./src/service-screen-time-tracker');
 
-const dataDir = path.join(os.homedir(), '.therealparentalcontrol');
-const configPath = path.join(dataDir, 'agent-config.json');
+const { getConfigDir, getConfigPath } = require('./config-path');
+const dataDir = getConfigDir();
+const configPath = getConfigPath();
 
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
