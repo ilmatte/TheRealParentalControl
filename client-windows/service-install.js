@@ -10,6 +10,11 @@ const svc = new Service({
   nodeOptions: ['--harmony', '--max_old_space_size=4096'],
 });
 
+// Install the service to run as LocalSystem so it is active for all users on the machine.
+svc.logOnAs.domain = 'NT AUTHORITY';
+svc.logOnAs.account = 'LocalSystem';
+svc.logOnAs.password = '';
+
 const action = process.argv[2];
 
 if (!action || !['install', 'uninstall'].includes(action)) {
