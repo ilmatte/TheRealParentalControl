@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import ServiceStatus from './ServiceStatus';
 
-function Dashboard({ deviceInfo, screenTimeInfo }) {
+function Dashboard({ deviceInfo, screenTimeInfo, serviceStatus }) {
   const [notificationMessage, setNotificationMessage] = useState('');
 
   const handleLogout = () => {
@@ -88,6 +89,8 @@ function Dashboard({ deviceInfo, screenTimeInfo }) {
             </div>
           </div>
         )}
+
+        <ServiceStatus serviceStatus={serviceStatus} />
 
         <div className="restrictions-card">
           <h2>Restrictions Active</h2>

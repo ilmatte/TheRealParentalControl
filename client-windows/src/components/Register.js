@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function Login({ onLoginSuccess, onSwitchToRegister }) {
+function Register({ onRegisterSuccess, onSwitchToLogin }) {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [serverUrl, setServerUrl] = useState(
@@ -22,15 +23,17 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
     loadConfig();
   }, []);
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${serverUrl}/api/auth/login`, {
+      const response = await axios.post(`${serverUrl}/api/auth/register`, {
         email,
         password,
+        username,
+        role: 'child',
       });
 
       localStorage.setItem('auth_token', response.data.token);
@@ -46,9 +49,9 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
         });
       }
 
-      onLoginSuccess();
+      onRegisterSuccess();
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
+      setError(err.response?.data?.error || 'Registration failed');
     } finally {
       setIsLoading(false);
     }
@@ -57,8 +60,8 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h1>Parental Control</h1>
-        <form onSubmit={handleLogin}>
+        <h1>Create Child Account</h1>
+        <form onSubmit={handleRegister}>
           <div className="form-group">
             <label>Backend URL</label>
             <input
@@ -67,6 +70,16 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
               onChange={(e) => setServerUrl(e.target.value)}
               required
               placeholder="https://parental-control-api-xxxx.onrender.com"
+            />
+          </div>
+          <div className="form-group">
+            <label>Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="Child Name"
             />
           </div>
           <div className="form-group">
@@ -91,16 +104,13 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
           </div>
           {error && <div className="error-message">{error}</div>}
           <button type="submit" disabled={isLoading}>
-            {isLoading ? 'Logging in...' : 'Login'}
+            {isLoading ? 'Registering...' : 'Register'}
           </button>
         </form>
         <p className="info-text">
-          This is a monitored device. Your parents can control your browsing.
-        </p>
-        <p className="info-text">
-          Don’t have an account yet?{' '}
-          <button className="link-button" type="button" onClick={onSwitchToRegister}>
-            Register
+          Already have an account?{' '}
+          <button className="link-button" onClick={onSwitchToLogin}>
+            Log in
           </button>
         </p>
       </div>
@@ -108,4 +118,4 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
   );
 }
 
-export default Login;
+export default Register;

@@ -1,9 +1,54 @@
 const { app, BrowserWindow, Menu, ipcMain, screen } = require('electron');
 const isDev = require('electron-is-dev');
 const path = require('path');
+const os = require('os');
+const fs = require('fs');
 const { setupChromeMonitoring } = require('./chrome-monitor');
 const { setupScreenTimeTracking } = require('./screen-time-tracker');
 const DeviceManager = require('./device-manager');
+
+const serviceConfigDir = path.join(os.homedir(), '.therealparentalcontrol');
+const serviceConfigPath = path.join(serviceConfigDir, 'agent-config.json');
+
+const ensureServiceConfigDir = () => {
+  if (!fs.existsSync(serviceConfigDir)) {
+    fs.mkdirSync(serviceConfigDir, { recursive: true });
+  }
+};
+
+const loadServiceConfig = () => {
+  try {
+    ensureServiceConfigDir();
+    if (!fs.existsSync(serviceConfigPath)) {
+      return null;
+    }
+    const raw = fs.readFileSync(serviceConfigPath, 'utf8');
+    return JSON.parse(raw);
+  } catch (error) {
+    console.error('Failed to load service config:', error);
+    return null;
+  }
+};
+
+const saveServiceConfig = (config) => {
+  try {
+    ensureServiceConfigDir();
+    const payload = {
+      serverUrl: config.serverUrl,
+      authToken: config.authToken,
+      authEmail: config.authEmail,
+      authPassword: config.authPassword,
+      userId: config.userId,
+      deviceId: config.deviceId,
+      savedAt: new Date().toISOString(),
+    };
+    fs.writeFileSync(serviceConfigPath, JSON.stringify(payload, null, 2), 'utf8');
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to save service config:', error);
+    return { success: false, error: error.message };
+  }
+};
 
 let mainWindow;
 let deviceManager;
@@ -67,4 +112,12 @@ ipcMain.handle('get-chrome-info', async () => {
 ipcMain.on('logout', () => {
   deviceManager.logout();
   mainWindow.webContents.send('user-logged-out');
+});
+
+ipcMain.handle('load-service-config', () => {
+  return loadServiceConfig();
+});
+
+ipcMain.handle('save-service-config', (event, config) => {
+  return saveServiceConfig(config);
 });

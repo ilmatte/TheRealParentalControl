@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Login from './components/Login';
+import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const [screenTimeInfo, setScreenTimeInfo] = useState(null);
   const [deviceInfo, setDeviceInfo] = useState(null);
+  const [serviceStatus, setServiceStatus] = useState(null);
+
+  const loadServiceStatus = async () => {
+    if (window.electronAPI?.loadServiceConfig) {
+      const config = await window.electronAPI.loadServiceConfig();
+      setServiceStatus(config);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('auth_token');
     if (token) {
       setIsLoggedIn(true);
       loadDeviceInfo();
+      loadServiceStatus();
     }
 
     // Listen for logout events
@@ -79,16 +90,26 @@ function App() {
   const handleLogin = () => {
     setIsLoggedIn(true);
     loadDeviceInfo();
+    loadServiceStatus();
+  };
+
+  const toggleForm = () => {
+    setShowRegister((prev) => !prev);
   };
 
   return (
     <div className="App">
       {!isLoggedIn ? (
-        <Login onLoginSuccess={handleLogin} />
+        showRegister ? (
+          <Register onRegisterSuccess={handleLogin} onSwitchToLogin={toggleForm} />
+        ) : (
+          <Login onLoginSuccess={handleLogin} onSwitchToRegister={toggleForm} />
+        )
       ) : (
         <Dashboard
           deviceInfo={deviceInfo}
           screenTimeInfo={screenTimeInfo}
+          serviceStatus={serviceStatus}
         />
       )}
     </div>

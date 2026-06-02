@@ -20,4 +20,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   logout: () => ipcRenderer.send('logout'),
   onUserLoggedOut: (callback) =>
     ipcRenderer.on('user-logged-out', callback),
+  loadServiceConfig: () => ipcRenderer.invoke('load-service-config'),
+  saveServiceConfig: (config) => ipcRenderer.invoke('save-service-config', config),
 });

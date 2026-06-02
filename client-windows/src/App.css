@@ -278,6 +278,34 @@ body {
   border-bottom: none;
 }
 
+/* Service status */
+.service-status-card {
+  background: #f8fbff;
+  border: 1px solid #dbe9ff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.12);
+}
+
+.service-status-card h2 {
+  font-size: 18px;
+  margin-bottom: 14px;
+  color: #2b4bb8;
+}
+
+.service-status-card .info-grid {
+  grid-template-columns: 1fr;
+}
+
+.service-status-card .info-item {
+  margin-bottom: 12px;
+}
+
+.service-status-card .label {
+  color: #6573c3;
+}
+
 /* Notification */
 .notification {
   background: #fff3cd;
