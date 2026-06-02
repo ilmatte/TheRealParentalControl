@@ -108,6 +108,34 @@ Il server sarà disponibile su `http://localhost:5000`
 npm run dev --workspace=@ParentalControl/client-windows
 ```
 
+### Installazione del servizio Windows (opzionale)
+
+Il client Windows può essere installato come servizio. Puoi scegliere se installarlo solo per l'utente corrente (default) oppure come servizio di sistema disponibile a tutti gli utenti (richiede privilegi amministrativi).
+
+- Installazione per l'utente corrente:
+
+```bash
+cd client-windows
+npm run service-install
+```
+
+- Installazione come servizio di sistema (tutti gli utenti, richiede admin):
+
+```bash
+cd client-windows
+npm run install:system
+```
+
+- Disinstallazione (usa la stessa modalità usata in fase di install):
+
+```bash
+cd client-windows
+npm run service-uninstall        # per l'utente corrente
+npm run uninstall:system         # per il service di sistema (admin)
+```
+
+Nota: l'installazione come servizio di sistema esegue il servizio con l'account `LocalSystem` per garantirne l'esecuzione indipendente dagli account utente.
+
 ### 7. Avvia l'app mobile genitore (React Native)
 ```bash
 npm run dev --workspace=@ParentalControl/parent-app

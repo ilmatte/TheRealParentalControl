@@ -10,16 +10,24 @@ const svc = new Service({
   nodeOptions: ['--harmony', '--max_old_space_size=4096'],
 });
 
-// Install the service to run as LocalSystem so it is active for all users on the machine.
-svc.logOnAs.domain = 'NT AUTHORITY';
-svc.logOnAs.account = 'LocalSystem';
-svc.logOnAs.password = '';
-
-const action = process.argv[2];
+// Parse CLI args: `node service-install.js <install|uninstall> [--system|-s|--all-users]`
+const args = process.argv.slice(2);
+const action = args[0];
+const systemInstall = args.includes('--system') || args.includes('--all-users') || args.includes('-s');
 
 if (!action || !['install', 'uninstall'].includes(action)) {
-  console.error('Usage: node service-install.js <install|uninstall>');
+  console.error('Usage: node service-install.js <install|uninstall> [--system|-s|--all-users]');
   process.exit(1);
+}
+
+if (systemInstall) {
+  // Configure the service to run as LocalSystem so it is available to all users on the machine.
+  svc.logOnAs.domain = 'NT AUTHORITY';
+  svc.logOnAs.account = 'LocalSystem';
+  svc.logOnAs.password = '';
+  console.log('Selected installation mode: system (LocalSystem)');
+} else {
+  console.log('Selected installation mode: current user');
 }
 
 svc.on('install', () => {

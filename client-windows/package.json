@@ -13,6 +13,8 @@
     "service-run": "node service.js",
     "service-install": "node service-install.js install",
     "service-uninstall": "node service-install.js uninstall",
+    "install:system": "node service-install.js install --system",
+    "uninstall:system": "node service-install.js uninstall --system",
     "lint": "eslint src/",
     "format": "prettier --write src/"
   },
