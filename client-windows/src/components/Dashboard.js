@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ServiceStatus from './ServiceStatus';
 
 function Dashboard({ deviceInfo, screenTimeInfo, serviceStatus }) {
+  // eslint-disable-next-line no-unused-vars
   const [notificationMessage, setNotificationMessage] = useState('');
 
   const handleLogout = () => {
