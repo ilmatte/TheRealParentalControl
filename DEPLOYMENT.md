@@ -70,8 +70,10 @@ Render automatically deploys! Wait ~2 minutes...
 # 1. New → PostgreSQL
 # 2. Select Free plan
 # 3. Name: parental-control-db
-# 4. PostgreSQL connection string auto-added to your Web Service
+# 4. PostgreSQL connection string auto-added to your Web Service as DATABASE_URL
 ```
+
+> Nota: il backend attuale del progetto usa MongoDB tramite la variabile `MONGO_URI`. Se scegli PostgreSQL su Render, Render fornirà `DATABASE_URL`, ma questo repository richiede comunque MongoDB a meno che non modifichi il codice per usare PostgreSQL.
 
 ## Step 5: Set Environment Variables in Render
 
@@ -80,7 +82,7 @@ In Render dashboard → Your Web Service → Environment:
 ```
 NODE_ENV = production
 PORT = (auto-set by Render)
-MONGODB_URI = mongodb+srv://user:pass@cluster.mongodb.net/parental_control
+MONGO_URI = mongodb+srv://user:pass@cluster.mongodb.net/parental_control
 JWT_SECRET = your-super-secret-key-at-least-32-chars
 JWT_EXPIRE = 7d
 CLIENT_URLS = https://your-domain.com
@@ -88,6 +90,16 @@ CORS_ORIGIN = https://your-domain.com
 ```
 
 Save changes. Render auto-redeploys!
+
+### Cosa significano questi valori
+- `MONGO_URI`: stringa di connessione a MongoDB. Questo è il valore usato dal backend del progetto per connettersi al database.
+- `CLIENT_URLS`: lista separata da virgole di origini autorizzate per le connessioni Socket.io dal client mobile e dal client Windows. Esempio: `https://myapp.example.com,https://another-origin.example.com`.
+- `CORS_ORIGIN`: origine autorizzata per le richieste HTTP CORS verso il backend. In questo progetto, Express usa la configurazione CORS generica, ma è buona pratica mantenere questo valore uguale a `CLIENT_URLS` per mettere in chiaro quali domini sono autorizzati.
+
+Se usi PostgreSQL su Render:
+- Render crea automaticamente `DATABASE_URL`.
+- Nel progetto corrente il backend non lo utilizza direttamente.
+- Per usare PostgreSQL dovresti aggiornare il codice backend per leggere `DATABASE_URL` e usare un driver/ORM PostgreSQL.
 
 ## Step 6: Build iOS App
 
